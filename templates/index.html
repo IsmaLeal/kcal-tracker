@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kcal tracker</title>
+        <link rel="stylesheet" href="/style/style.css">
+    </head>
+    <body>
+        <form action="/submit" method="POST">
+            <div>
+                <label for="food">Food:</label>
+                <input type="text" id="food" name="food" required />
+            </div>
+            <div>
+                <label for="total_kcal">Total kcal:</label>
+                <input type="number" id="total_kcal" name="total_kcal" />
+            </div>
+            <div>
+                <label for="kcal">kcal per 100g:</label>
+                <input type="number" id="kcal" name="kcal" />
+            </div>
+            <div>
+                <label for="weight">Weight:</label>
+                <input type="number" id="weight" name="weight"/>
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </body>
+</html>

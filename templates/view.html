@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Food Log</title>
+  </head>
+  <body>
+    <h1>Logged Food Entries</h1>
+    <ul>
+      {% for food, kcal, time in entries %}
+          <li><strong>{{ food }}</strong>: {{ kcal }} kcal ({{ time }})</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

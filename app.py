@@ -90,11 +90,11 @@ def count_kcal():
         WHERE timestamp::date = %s
     """, (today,))
 
-result = c.fetchone()[0]
-conn.close()
-
-total = result if result else 0
-return render_template("counter.html", total_kcal=total, today=today)
+    result = c.fetchone()[0]
+    conn.close()
+    
+    total = result if result else 0
+    return render_template("counter.html", total_kcal=total, today=today)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

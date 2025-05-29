@@ -63,19 +63,19 @@ def download():
     entries = c.fetchall()
     conn.close()
 
-si = StringIO()
-cw = csv.writer(si)
-cw.writerow(["food", "total_kcal", "timestamp"])
-cw.writerows(entries)
+    si = StringIO()
+    cw = csv.writer(si)
+    cw.writerow(["food", "total_kcal", "timestamp"])
+    cw.writerows(entries)
+    
+    output = si.getvalue()
+    si.close()
 
-output = si.getvalue()
-si.close()
-
-return Response(
-    output,
-    mimetype="text/csv",
-    headers={"Content-Disposition": "attachment;filename=entries.csv"}
-)
+    return Response(
+        output,
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment;filename=entries.csv"}
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

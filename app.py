@@ -44,5 +44,14 @@ def submit():
 
     return "Saved successfully!"
 
+@app.route("/view")
+def view():
+    conn = psycopg2.connect(DATABASE_URL)
+    c = conn.cursor()
+    c.execute("SELECT food, total_kcal, timestamp FROM entries ORDER BY timestamp DESC")
+    entries = c.fetchall()
+    conn.close()
+    return render_template("view.html", entries=entries)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

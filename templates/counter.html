@@ -30,5 +30,11 @@
       <h1>Calorie count for {{ today }}</h1>
       <p class="number">{{ total_kcal }} kcal </p>
     </div>
+    <h2>📊 Previous 15 days</h2>
+    <ul>
+      {% for date, kcal in prev.items() %}
+        <li><strong>{{ date }}</strong>: {{ kcal }} kcal</li>
+      {% endfor %}
+    </ul>
   </body>
 </html>

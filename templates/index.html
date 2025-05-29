@@ -6,6 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        {% if message %}
+            <p style="color:green;">{{ message }}</p>
+        {% endif %}
         <div class="container">
             <h1>Kcal Tracker</h1>
             <form action="/submit" method="POST">

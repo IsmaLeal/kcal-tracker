@@ -27,7 +27,7 @@ h1 {
 label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: bold;
+  font-weight: none;
   color: #1f1e1e;
 }
 

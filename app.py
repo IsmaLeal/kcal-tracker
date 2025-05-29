@@ -80,6 +80,7 @@ def download():
 @app.route("/counter")
 def count_kcal():
     today = datetime.now().strftime("%Y-%m-%d")
+    today_display = datetime.now().strftime("%d/%m")
     
     conn = psycopg2.connect(DATABASE_URL)
     c = conn.cursor()
@@ -94,7 +95,7 @@ def count_kcal():
     conn.close()
     
     total = result if result else 0
-    return render_template("counter.html", total_kcal=total, today=today)
+    return render_template("counter.html", total_kcal=total, today=today_display)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

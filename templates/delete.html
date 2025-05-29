@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Delete Entries</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+        background: #92ad7b;
+      }
+
+      .entry {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🗑️ Delete Entries</h1>
+    <form method="POST">
+      {% for food, kcal, timestamp in entries %}
+      <div class="entry">
+        <label>
+          <input type="checkbox" name="delete_ids" value="{{ timestamp }}">
+          <strong>{{ food }}</strong> - {{ kcal }} kcal at {{ timestamp }}
+        </label>
+      </div>
+      {% endfor %}
+      <button type="submit">Delete Selected</button>
+    </form>
+  </body>
+</html>

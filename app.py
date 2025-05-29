@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, url_for, redirect
 import psycopg2
 import os
 from datetime import datetime, timedelta
@@ -109,6 +109,30 @@ def count_kcal():
     
     conn.close()
     return render_template("counter.html", total_kcal=todays_total, today=today_display, prev=previous_results)
+
+@app.route("/delete", methods=["GET", "POST"])
+def delete():
+    conn = psycopg2.connect(DATABASE_URL)
+    c = conn.cursor()
+
+    if request.method == "POST":
+        timestamps_to_delete = request.form.getlist("delete_ids")
+        for ts in timestamps_to_delete:
+            c.execute("DELETE FROM entries WHERE timestamp = %s", (ts,))
+        conn.commit()
+        conn.close()
+        return redirect(url_for("delete")) # refresh the list
+    
+    c.execute("""
+        SELECT food, total_kcal, timestamp
+        FROM entries
+        ORDER BY timestamp DESC
+        LIMIT 10
+    """)
+    last_entries = c.fetchall()
+    conn.close()
+
+    return render_template("delete.html", entries=last_entries)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

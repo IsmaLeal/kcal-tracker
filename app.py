@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 import psycopg2
 import os
 from datetime import datetime
+import csv
+from io import StringIO
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 app = Flask(__name__)
@@ -52,6 +54,28 @@ def view():
     entries = c.fetchall()
     conn.close()
     return render_template("view.html", entries=entries)
+
+@app.route("/download")
+def download():
+    conn = psycopg2.connect(DATABASE_URL)
+    c = conn.cursor()
+    c.execute("SELECT food, total_kcal, timestamp FROM entries ORDER BY timestamp DESC")
+    entries = c.fetchall()
+    conn.close()
+
+si = StringIO()
+cw = csv.writer(si)
+cw.writerow(["food", "total_kcal", "timestamp"])
+cw.writerows(entries)
+
+output = si.getvalue()
+si.close()
+
+return Response(
+    output,
+    mimetype="text/csv",
+    headers={"Content-Disposition": "attachment;filename=entries.csv"}
+)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

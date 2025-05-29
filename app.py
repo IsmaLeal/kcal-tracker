@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
-import sqlite3
+import psycopg2
+import os
 from datetime import datetime
 
+DATABASE_URL = os.environ.get("DATABASE_URL")
 app = Flask(__name__)
 
 @app.route("/")
@@ -25,11 +27,9 @@ def submit():
         return "Error: missing required data", 400
 
     total_kcal = round(total_kcal)
-
-
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    conn = sqlite3.connect("kcal.db")
+    conn = psycopg2.connect(DATABASE_URL)
     c = conn.cursor()
     c.execute("""
     CREATE TABLE IF NOT EXISTS entries (

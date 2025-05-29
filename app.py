@@ -77,5 +77,24 @@ def download():
         headers={"Content-Disposition": "attachment;filename=entries.csv"}
     )
 
+@app.route("/counter")
+def count_kcal():
+    today = datetime.now().strftime("%Y-%m-%d")
+    
+    conn = psycopg2.connect(DATABASE_URL)
+    c = conn.cursor()
+    
+    c.execute("""
+        SELECT SUM(total_kcal)
+        FROM entries
+        WHERE timestamp::date = %s
+    """, (today,))
+
+result = c.fetchone()[0]
+conn.close()
+
+total = result if result else 0
+return render_template("counter.html", total_kcal=total, today=today)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

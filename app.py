@@ -44,7 +44,7 @@ def submit():
     conn.commit()
     conn.close()
 
-    return "Saved successfully!"
+    return render_template("index.html", message="Saved successfully!")
 
 @app.route("/view")
 def view():

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, Response
 import psycopg2
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import csv
 from io import StringIO
 
@@ -91,11 +91,23 @@ def count_kcal():
         WHERE timestamp::date = %s
     """, (today,))
 
-    result = c.fetchone()[0]
+    todays_result = c.fetchone()[0]
+
+    previous_results = {}
+    for i in range(1, 16):
+        date = today - timedelta(days=i)
+        c.execute("""
+            SELECT SUM(total_kcal)
+            FROM entries
+            WHERE timestamp::date = %s
+        """, (date,))
+        value = c.fetchone()[0]
+        previous_results[date.strftime("%d/%m")] = value if value else 0
+    
     conn.close()
     
-    total = result if result else 0
-    return render_template("counter.html", total_kcal=total, today=today_display)
+    todays_total = todays_result if todays_result else 0
+    return render_template("counter.html", total_kcal=todays_total, today=today_display, prev=previous_results)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

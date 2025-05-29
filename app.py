@@ -79,8 +79,9 @@ def download():
 
 @app.route("/counter")
 def count_kcal():
-    today = datetime.now().strftime("%Y-%m-%d")
-    today_display = datetime.now().strftime("%d/%m")
+    today = datetime.now()
+    today_iso = today.strftime("%Y-%m-%d")
+    today_display = today.strftime("%d/%m")
     
     conn = psycopg2.connect(DATABASE_URL)
     c = conn.cursor()
@@ -89,24 +90,24 @@ def count_kcal():
         SELECT SUM(total_kcal)
         FROM entries
         WHERE timestamp::date = %s
-    """, (today,))
+    """, (today_iso,))
 
     todays_result = c.fetchone()[0]
+    todays_total = todays_result if todays_result else 0
 
     previous_results = {}
     for i in range(1, 16):
         date = today - timedelta(days=i)
+        date_iso = date.strftime("%Y-%m-%d")
         c.execute("""
             SELECT SUM(total_kcal)
             FROM entries
             WHERE timestamp::date = %s
-        """, (date,))
+        """, (date_iso,))
         value = c.fetchone()[0]
         previous_results[date.strftime("%d/%m")] = value if value else 0
     
     conn.close()
-    
-    todays_total = todays_result if todays_result else 0
     return render_template("counter.html", total_kcal=todays_total, today=today_display, prev=previous_results)
 
 if __name__ == "__main__":

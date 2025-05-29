@@ -134,5 +134,21 @@ def delete():
 
     return render_template("delete.html", entries=last_entries)
 
+@app.route("/insert_yesterday/<food>/<int:kcal>")
+def insert_yesterday(food, kcal):
+    yesterday = datetime.now() - timedelta(days=1)
+    timestamp = yesterday.strftime("%Y-%m-%d %H:%M:%S")
+
+    conn = psycopg2.connect(DATABASE_URL)
+    c = conn.cursor()
+    c.execute("""
+        INSERT INTO entries (food, total_kcal, timestamp)
+        VALUES (%s, %s, %s)
+    """, (food, kcal, timestamp))
+    conn.commit()
+    conn.close()
+
+    return f"Inserted '{food}' with {kcal} kcal for yesterday ({timestamp})"
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

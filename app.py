@@ -38,7 +38,7 @@ def submit():
         timestamp TEXT
     ) 
     """)
-    c.execute("INSERT INTO entries (food, total_kcal, timestamp) VALUES (?, ?, ?)", (food, total_kcal, now))
+    c.execute("INSERT INTO entries (food, total_kcal, timestamp) VALUES (%s, %s, %s)", (food, total_kcal, now))
     conn.commit()
     conn.close()
 
